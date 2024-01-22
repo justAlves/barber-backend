@@ -44,6 +44,16 @@ class UserController {
 
 		return response.json({user});
 	}
+
+	async checkUserSubscription(request: Request, response: Response): Promise<Response>{
+		const { user_id } = request;
+
+		const userService = new UserService();
+
+		const user = await userService.checkUserSubscription(user_id);
+
+		return response.json({user});
+	}
 }
 
 export { UserController };

@@ -14,6 +14,7 @@ router.post("/users", userController.createUser);
 router.post("/users/auth", userController.authUser);
 router.get("/me", isAuthenticated, userController.getUser);
 router.put("/me", isAuthenticated, userController.updateUser);
+router.get("/me/subscription", isAuthenticated, userController.checkUserSubscription);
 
 // Rotas de Cortes de cabelo
 router.post("/haircuts", isAuthenticated, haircutController.createHaircut);

@@ -181,6 +181,28 @@ class UserService{
 			throw new Error(error.message);
 		}
 	}
+
+	async checkUserSubscription(user_id: string) {
+		const user = await prisma.user.findFirst({
+			where: {
+				id: user_id
+			},
+			select: {
+				subscriptions: {
+					select: {
+						id: true,
+						status: true,
+					}
+				}
+			}
+		});
+
+		if (!user) {
+			throw new Error("User not found!");
+		}
+
+		return user;
+	}
 }
 
 export { UserService };
