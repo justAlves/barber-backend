@@ -1,4 +1,4 @@
-import { RegisterUserDto, AuthUserDto, Session } from "./dtos/UserDtos";
+import { RegisterUserDto, AuthUserDto, Session, UpdateUserDto } from "./dtos/UserDtos";
 import prisma from "../../prisma";
 import emailValidation from "../../validations/EmailValidation";
 import { User } from "@prisma/client";
@@ -106,6 +106,80 @@ class UserService{
 			user: userReturn,
 			token
 		};
+	}
+
+	async getUser(user_id: string) {
+
+		const user = await prisma.user.findFirst({
+			where: {
+				id: user_id
+			},
+			select: {
+				id: true,
+				name: true,
+				email: true,
+				cep: true,
+				city: true,
+				address: true,
+				complement: true,
+				number: true,
+				state: true,
+				subscriptions: {
+					select: {
+						id: true,
+						priceId: true,
+						status: true,
+					}
+				}
+			}
+		});
+
+		return user;
+	}
+
+	async updateUser({id, name, cep, city, state, address, number, complement}: UpdateUserDto) {
+		try {
+			const user = await prisma.user.findFirst({
+				where: {
+					id
+				}
+			});
+			
+			if (!user) {
+				throw new Error("User not found!");
+			}
+
+			const userUpdated = await prisma.user.update({
+				where: {
+					id
+				},
+				data: {
+					name,
+					cep,
+					city,
+					state,
+					address,
+					number,
+					complement,
+				},
+				select: {
+					id: true,
+					name: true,
+					email: true,
+					cep: true,
+					city: true,
+					address: true,
+					complement: true,
+					number: true,
+					state: true,
+				}
+			});
+
+			return userUpdated;
+
+		} catch (error) {
+			throw new Error(error.message);
+		}
 	}
 }
 

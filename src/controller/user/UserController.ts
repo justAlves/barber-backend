@@ -23,6 +23,27 @@ class UserController {
 
 		return response.json(session);
 	}
+
+	async getUser(request: Request, response: Response): Promise<Response>{
+		const { user_id } = request;
+
+		const userService = new UserService();
+
+		const user = await userService.getUser(user_id);
+
+		return response.json({user});
+	}
+
+	async updateUser(request: Request, response: Response): Promise<Response>{
+		const { user_id } = request;
+		const {name, cep, city, state, address, number, complement} = request.body;
+
+		const userService = new UserService();
+
+		const user = await userService.updateUser({id: user_id, name, cep, city, state, address, number, complement});
+
+		return response.json({user});
+	}
 }
 
 export { UserController };

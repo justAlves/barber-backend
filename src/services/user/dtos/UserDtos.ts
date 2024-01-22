@@ -31,3 +31,14 @@ export interface Session {
   user: User;
   token: string;
 }
+
+export interface UpdateUserDto {
+  id: string;
+  name?: string;
+  cep?: string; 
+  city?: string;
+  state?: string;
+  address?: string;
+  number?: string;
+  complement?: string;
+}
