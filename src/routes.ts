@@ -1,9 +1,13 @@
-import {Router, Request, Response} from "express";
+import {Router} from "express";
+
+import {UserController} from "./controller/user/UserController";
+
+const userController = new UserController();
 
 const router = Router();
 
-router.get("/", (req: Request, res: Response) => {
-	return res.send("Hello world!");
-});
+// Rotas de usuário
+router.post("/users", userController.createUser);
+
 
 export {router};
