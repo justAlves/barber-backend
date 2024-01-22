@@ -18,5 +18,6 @@ router.put("/me", isAuthenticated, userController.updateUser);
 // Rotas de Cortes de cabelo
 router.post("/haircuts", isAuthenticated, haircutController.createHaircut);
 router.get("/haircuts", isAuthenticated, haircutController.listHaircuts);
+router.put("/haircuts", isAuthenticated, haircutController.updateHaircut);
 
 export {router};

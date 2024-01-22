@@ -20,9 +20,20 @@ class HaircutController {
 
 		const haircutService = new HaircutService();
 
-		const haircuts = await haircutService.listHaircuts(user_id, status);
+		const haircuts = await haircutService.listHaircuts({user_id, status});
 
 		return response.json(haircuts);
+	}
+
+	async updateHaircut(request: Request, response: Response): Promise<Response>{
+		const {user_id} = request;
+		const {name, price, status, haircut_id} = request.body;
+
+		const haircutService = new HaircutService();
+
+		const haircut = await haircutService.updateHaircut({user_id, haircut_id, name, price, status});
+
+		return response.json(haircut);
 	}
 }
 

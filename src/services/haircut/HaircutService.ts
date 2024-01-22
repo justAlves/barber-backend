@@ -1,5 +1,5 @@
 import prisma from "../../prisma";
-import { CreateHaircutDto } from "./dtos/HaircutDto";
+import { CreateHaircutDto, ListHaircutsDto, UpdateHaircutDto } from "./dtos/HaircutDto";
 
 class HaircutService{
 	async createHaircut({user_id, name, price}: CreateHaircutDto){
@@ -37,7 +37,7 @@ class HaircutService{
 		return haircut;
 	}
 
-	async listHaircuts(user_id: string, status: boolean | string){
+	async listHaircuts({user_id, status}: ListHaircutsDto){
 		const haircuts = await prisma.haircut.findMany({
 			where: {
 				userId: user_id,
@@ -46,6 +46,34 @@ class HaircutService{
 		});
 
 		return haircuts;
+	}
+
+	async updateHaircut({user_id, haircut_id, name, price, status}: UpdateHaircutDto){
+		const user = await prisma.user.findFirst({
+			where: {
+				id: user_id,
+			},
+			include: {
+				subscriptions: true,
+			}
+		});
+
+		if(user?.subscriptions?.status !== "active"){
+			throw new Error("You don't have an active subscription! Subscribe to update your haircut!");	
+		}
+
+		const haircut = await prisma.haircut.update({
+			where: {
+				id: haircut_id,
+			},
+			data: {
+				name,
+				price,
+				status: status === "true" ? true : false,
+			}
+		});
+
+		return haircut;
 	}
 }
 
