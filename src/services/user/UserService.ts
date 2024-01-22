@@ -1,23 +1,26 @@
-import { UserDto } from "./dtos/UserDtos";
+import { RegisterUserDto, AuthUserDto, Session } from "./dtos/UserDtos";
 import prisma from "../../prisma";
 import emailValidation from "../../validations/EmailValidation";
 import { User } from "@prisma/client";
 import passwordValidation from "../../validations/PasswordValidation";
-import { hash } from "bcrypt";
+import { compare, hash } from "bcrypt";
+import { sign } from "jsonwebtoken";
 
 class UserService{
-
 	async findUserByEmail(email: string): Promise<User | null>{
-		const user = await prisma.user.findUnique({
+		const user = await prisma.user.findFirst({
 			where: {
 				email
-			}
+			},
+			include: {
+				subscriptions: true
+			},
 		});
 
 		return user;
 	}
 
-	async createUser({email, name, password, cep, city, state, address, number, complement}: UserDto): Promise<User>{
+	async createUser({email, name, password, cep, city, state, address, number, complement}: RegisterUserDto): Promise<User>{
 
 		const emailValidated = emailValidation(email);
 
@@ -65,6 +68,44 @@ class UserService{
 		});
 
 		return user as User;
+	}
+
+	async authUser({email, password}: AuthUserDto): Promise<Session> {
+
+		const user = await this.findUserByEmail(email);
+
+		if (!user) {
+			throw new Error("Email or password incorrect!");
+		}
+
+		const passwordMatch = await compare(password, user.password);
+
+		if (!passwordMatch) {
+			throw new Error("Email or password incorrect!");
+		}
+
+		const token = sign(
+			{
+				name: user.name,
+				email: user.email,
+			},
+			process.env.JWT_SECRET,
+			{
+				subject: user.id,
+				expiresIn: "30d"
+			}
+		);
+
+		const userReturn = {
+			...user,
+			password: undefined
+		};
+
+
+		return {
+			user: userReturn,
+			token
+		};
 	}
 }
 
