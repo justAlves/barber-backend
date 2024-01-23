@@ -25,5 +25,6 @@ router.put("/haircuts", isAuthenticated, haircutController.updateHaircut);
 
 // Rotas de agendamento
 router.post("/schedules", isAuthenticated, scheduleController.createSchedule);
+router.get("/schedules", isAuthenticated, scheduleController.listSchedules);
 
 export {router};
