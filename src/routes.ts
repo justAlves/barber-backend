@@ -22,9 +22,12 @@ router.get("/me/subscription", isAuthenticated, userController.checkUserSubscrip
 router.post("/haircuts", isAuthenticated, haircutController.createHaircut);
 router.get("/haircuts", isAuthenticated, haircutController.listHaircuts);
 router.put("/haircuts", isAuthenticated, haircutController.updateHaircut);
+router.get("/haircut", isAuthenticated, haircutController.detailHaircut);
+router.delete("/haircut", isAuthenticated, haircutController.deleteHaircut);
 
 // Rotas de agendamento
 router.post("/schedules", isAuthenticated, scheduleController.createSchedule);
 router.get("/schedules", isAuthenticated, scheduleController.listSchedules);
+router.delete("/schedules", isAuthenticated, scheduleController.deleteSchedule);
 
 export {router};
