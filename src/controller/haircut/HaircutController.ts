@@ -35,6 +35,26 @@ class HaircutController {
 
 		return response.json(haircut);
 	}
+
+	async detailHaircut(request: Request, response: Response): Promise<Response>{
+		const haircut_id = request.query.haircut_id as string;
+
+		const haircutService = new HaircutService();
+
+		const haircut = await haircutService.detailHaircut(haircut_id);
+
+		return response.json(haircut);
+	}
+
+	async deleteHaircut(request: Request, response: Response): Promise<Response>{
+		const haircut_id = request.query.haircut_id as string;
+
+		const haircutService = new HaircutService();
+
+		const haircut = await haircutService.deleteHaircut(haircut_id);
+
+		return response.json(haircut);
+	}
 }
 
 export { HaircutController };

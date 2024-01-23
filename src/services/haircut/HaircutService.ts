@@ -75,6 +75,26 @@ class HaircutService{
 
 		return haircut;
 	}
+
+	async detailHaircut(haircut_id: string){
+		const haircut = await prisma.haircut.findFirst({
+			where: {
+				id: haircut_id,
+			}
+		});
+
+		return haircut;
+	}
+
+	async deleteHaircut(haircut_id: string){
+		const haircut = await prisma.haircut.delete({
+			where: {
+				id: haircut_id,
+			}
+		});
+
+		return haircut;
+	}
 }
 
 export { HaircutService};
